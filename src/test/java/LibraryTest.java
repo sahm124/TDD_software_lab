@@ -6,7 +6,6 @@ import classes.Student;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,22 +40,61 @@ public class LibraryTest {
     }
 
     @Test
-    public void testSearchBooksById() {
-        // Create some sample books
-        ArrayList<Book> books = new ArrayList<>(Arrays.asList(
-                new Book("The Lord of the Rings", "J.R.R. Tolkien" , 1),
-                new Book("Pride and Prejudice", "Jane Austen", 2),
-                new Book("The Hitchhiker's Guide to the Galaxy", "Douglas Adams", 3)));
+    void testSearchStudentsById() {
+        Library library = new Library();
+        Student student1 = new Student("ali", 1);
+        Student student2 = new Student("hasan", 2);
+        Student student3 = new Student("javad", 3);
+        library.addStudent(student1);
+        library.addStudent(student2);
+        library.addStudent(student3);
 
-        // Search by ID
-        ArrayList<Object> keys = new ArrayList<>(Arrays.asList(2)); // Search for book with ID 2
-        ArrayList<Book> expectedBooks = new ArrayList<>(Arrays.asList(
-                new Book("Pride and Prejudice", "Jane Austen", 2)
-        ));
+        ArrayList<Object> keys = new ArrayList<>();
+        keys.add(1);
+        keys.add(3);
 
-        ArrayList<Book> actualBooks = new Library().searchBooks(SearchByType.ID, keys);
+        ArrayList<Student> foundStudents = library.searchStudents(SearchByType.ID, keys);
 
-        assertEquals(expectedBooks, actualBooks);
+        assertEquals(2, foundStudents.size());
+        assertTrue(foundStudents.contains(student1));
+        assertTrue(foundStudents.contains(student3));
+        assertFalse(foundStudents.contains(student2));
+    }
+
+    @Test
+    void testSearchStudentsByUnsupportedType() {
+        Library library = new Library();
+        Student student1 = new Student("ali", 1);
+        Student student2 = new Student("hasan", 2);
+        Student student3 = new Student("javad", 3);
+        library.addStudent(student1);
+        library.addStudent(student2);
+        library.addStudent(student3);
+
+        ArrayList<Object> keys = new ArrayList<>();
+        keys.add("chert");
+
+        ArrayList<Student> foundStudents = library.searchStudents(SearchByType.TITLE, keys);
+
+        assertNull(foundStudents);
+    }
+
+    @Test
+    void testSearchBooksByTitle() {
+        Library library = new Library();
+        Book book1 = new Book("Book-1", "Author-1", 1);
+        Book book2 = new Book("Book-2", "Author-2", 2);
+        library.addBook(book1);
+        library.addBook(book2);
+
+        ArrayList<Object> keys = new ArrayList<>();
+        keys.add("Book-1");
+
+        ArrayList<Book> foundBooks = library.searchBooks(SearchByType.TITLE, keys);
+
+        assertEquals(1, foundBooks.size());
+        assertTrue(foundBooks.contains(book1));
+        assertFalse(foundBooks.contains(book2));
     }
 }
 

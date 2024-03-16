@@ -39,13 +39,16 @@ public class Main {
         library.lendBook(book1, student1);
         library.lendBook(book2, student3);
         library.returnBook(book2, student3);
+        library.returnBook(book1, student1); // In order to generate the requested output according to the comment
         library.lendBook(book4, student2);
 
         library.lendBook(book5, student1);
 
         // Example for search functions
         var keys = new ArrayList<Object>(Arrays.asList(10, 11));
-        library.searchBooks(SearchByType.ID, keys); // Should return [book1, book2]
-        library.searchBooks(SearchByType.NAME, keys); // Should return null
+        System.out.println(library.searchBooks(SearchByType.ID, keys));; // Should return [book1, book2]
+        System.out.println(library.searchBooks(SearchByType.NAME, keys));; // Should return null
+
+        System.out.println(library.searchStudents(SearchByType.ID, keys));
     }
 }

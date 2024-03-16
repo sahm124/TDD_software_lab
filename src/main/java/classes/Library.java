@@ -81,34 +81,22 @@ public class Library {
      * @return             The list of students that match the search criteria. Returns null if search type is title or author.
      */
     public ArrayList<Student> searchStudents(SearchByType searchByType, ArrayList<Object> keys) {
-        ArrayList<Student> matchedStudents = new ArrayList<>();
+        ArrayList<Student> matchingStudents = new ArrayList<>();
+
+
         if (searchByType == SearchByType.TITLE || searchByType == SearchByType.AUTHOR) {
-            return null; // جستجو بر اساس عنوان یا نویسنده برای دانشجویان پشتیبانی نمی‌شود.
+            return null; 
         }
 
-        for (Student student : students) {
-            for (Object key : keys) {
-                boolean matchFound = false;
-                switch (searchByType) {
-                    case ID:
-                        if (student.getId() == (Integer) key) {
-                            matchFound = true;
-                        }
-                        break;
-                    case NAME:
-                        if (student.getName().equals(key.toString())) {
-                            matchFound = true;
-                        }
-                        break;
-                }
-                if (matchFound) {
-                    matchedStudents.add(student);
-                    break; // خارج شدن از حلقه کلید‌ها
-                }
+        for (Student student : this.students) {
+            Object studentFieldValue = getFieldValue(student, searchByType);
+
+            if (keys.contains(studentFieldValue)) {
+                matchingStudents.add(student);
             }
         }
 
-        return matchedStudents;
+        return matchingStudents;
     }
 
     /**
@@ -120,39 +108,51 @@ public class Library {
      * @return             The list of books that match the search criteria. Returns null if search type is name.
      */
     public ArrayList<Book> searchBooks(SearchByType searchByType, ArrayList<Object> keys) {
-        ArrayList<Book> matchedBooks = new ArrayList<>();
+        ArrayList<Book> matchingBooks = new ArrayList<>();
+    
         if (searchByType == SearchByType.NAME) {
-            return null; // طبق توضیحات، جستجو بر اساس نام پشتیبانی نمی‌شود.
+            return null; 
         }
-
-        for (Book book : books) {
-            for (Object key : keys) {
-                boolean matchFound = false;
-                switch (searchByType) {
-                    case ID:
-                        if (book.getId() == (Integer) key) {
-                            matchFound = true;
-                        }
-                        break;
-                    case TITLE:
-                        if (book.getTitle().equals(key.toString())) {
-                            matchFound = true;
-                        }
-                        break;
-                    case AUTHOR:
-                        if (book.getAuthor().equals(key.toString())) {
-                            matchFound = true;
-                        }
-                        break;
-                }
-                if (matchFound) {
-                    matchedBooks.add(book);
-                    break; // خارج شدن از حلقه کلید‌ها
-                }
+    
+        for (Book book : this.books) {
+            Object bookFieldValue = getFieldValue(book, searchByType);
+ 
+            if (keys.contains(bookFieldValue)) {
+                matchingBooks.add(book);
             }
         }
+    
+        return matchingBooks;
+    }
 
-        return matchedBooks;
+    // Helper method to get the value of the specified field from a student or book
+    private Object getFieldValue(Object obj, SearchByType searchByType) {
+        if (obj instanceof Student) {
+            Student student = (Student) obj;
+            switch (searchByType) {
+                case ID:
+                    return student.getId();
+                case NAME:
+                    return student.getName();
+                default:
+                    return null;
+            }
+        } else if (obj instanceof Book) {
+            Book book = (Book) obj;
+            switch (searchByType) {
+                case ID:
+                    return book.getId();
+                case TITLE:
+                    return book.getTitle();
+                case AUTHOR:
+                    return book.getAuthor();
+                default:
+                    return null;
+            }
+        } else {
+            // Handel error
+            throw new IllegalArgumentException("Unsupported object type for search");
+        }
     }
 
     /**
