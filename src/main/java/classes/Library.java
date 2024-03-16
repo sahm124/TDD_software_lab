@@ -81,8 +81,34 @@ public class Library {
      * @return             The list of students that match the search criteria. Returns null if search type is title or author.
      */
     public ArrayList<Student> searchStudents(SearchByType searchByType, ArrayList<Object> keys) {
-        // TODO complete function
-        return null;
+        ArrayList<Student> matchedStudents = new ArrayList<>();
+        if (searchByType == SearchByType.TITLE || searchByType == SearchByType.AUTHOR) {
+            return null; // جستجو بر اساس عنوان یا نویسنده برای دانشجویان پشتیبانی نمی‌شود.
+        }
+
+        for (Student student : students) {
+            for (Object key : keys) {
+                boolean matchFound = false;
+                switch (searchByType) {
+                    case ID:
+                        if (student.getId() == (Integer) key) {
+                            matchFound = true;
+                        }
+                        break;
+                    case NAME:
+                        if (student.getName().equals(key.toString())) {
+                            matchFound = true;
+                        }
+                        break;
+                }
+                if (matchFound) {
+                    matchedStudents.add(student);
+                    break; // خارج شدن از حلقه کلید‌ها
+                }
+            }
+        }
+
+        return matchedStudents;
     }
 
     /**
@@ -94,8 +120,39 @@ public class Library {
      * @return             The list of books that match the search criteria. Returns null if search type is name.
      */
     public ArrayList<Book> searchBooks(SearchByType searchByType, ArrayList<Object> keys) {
-        // TODO complete function
-        return null;
+        ArrayList<Book> matchedBooks = new ArrayList<>();
+        if (searchByType == SearchByType.NAME) {
+            return null; // طبق توضیحات، جستجو بر اساس نام پشتیبانی نمی‌شود.
+        }
+
+        for (Book book : books) {
+            for (Object key : keys) {
+                boolean matchFound = false;
+                switch (searchByType) {
+                    case ID:
+                        if (book.getId() == (Integer) key) {
+                            matchFound = true;
+                        }
+                        break;
+                    case TITLE:
+                        if (book.getTitle().equals(key.toString())) {
+                            matchFound = true;
+                        }
+                        break;
+                    case AUTHOR:
+                        if (book.getAuthor().equals(key.toString())) {
+                            matchFound = true;
+                        }
+                        break;
+                }
+                if (matchFound) {
+                    matchedBooks.add(book);
+                    break; // خارج شدن از حلقه کلید‌ها
+                }
+            }
+        }
+
+        return matchedBooks;
     }
 
     /**
